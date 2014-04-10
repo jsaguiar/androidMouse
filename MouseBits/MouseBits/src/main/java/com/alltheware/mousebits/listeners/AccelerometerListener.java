@@ -25,9 +25,9 @@ public class AccelerometerListener implements SensorEventListener
 
 
     /** Period for accelerometer sampling **/
-    public static final long FETCH_PERIOD = 60;
+    public static final long FETCH_PERIOD = 5;
     /** Length of each accelerometer sample **/
-    public static final long SAMPLE_DURATION = 50;
+    public static final long SAMPLE_DURATION = 3;
 
     //ArrayList for store accelerometer sample data
     private ArrayList<Float> acXXValues = new ArrayList<Float>();
