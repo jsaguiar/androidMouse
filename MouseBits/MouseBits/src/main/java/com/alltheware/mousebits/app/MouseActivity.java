@@ -1,5 +1,9 @@
 package com.alltheware.mousebits.app;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import com.alltheware.mousebits.listeners.AccelerometerListener;
 
 
 public class MouseActivity extends ActionBarActivity {
@@ -23,6 +28,14 @@ public class MouseActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        Handler moveHandler = new Handler();
+
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        AccelerometerListener accelerometerListener = new AccelerometerListener();
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(accelerometerListener, accelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL, moveHandler);
     }
 
 
