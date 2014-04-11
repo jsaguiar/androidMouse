@@ -1,9 +1,9 @@
 import javax.bluetooth.DiscoveryAgent;
 import javax.bluetooth.LocalDevice;
+import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
-import javax.bluetooth.UUID;
 
 /**
  * Created by joao on 4/11/14.
@@ -32,6 +32,7 @@ public class WaitThread implements Runnable{
             local.setDiscoverable(DiscoveryAgent.GIAC);
 
             UUID uuid = new UUID(80087355); // "04c6093b-0000-1000-8000-00805f9b34fb"
+
             String url = "btspp://localhost:" + uuid.toString() + ";name=RemoteBluetooth";
             notifier = (StreamConnectionNotifier) Connector.open(url);
         } catch (Exception e) {
