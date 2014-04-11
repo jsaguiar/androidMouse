@@ -4,4 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.alltheware.mousebits.app.MouseActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame"
+    android:layout_above="@+id/bluetooth_state">
+
+    <TextView
+    android:id="@+id/bluetooth_state"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:text="Bluetooth state..." />
+
+</FrameLayout>
+
+
