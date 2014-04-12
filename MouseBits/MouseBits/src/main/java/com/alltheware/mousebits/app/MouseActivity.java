@@ -7,18 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
-import android.os.Build;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.alltheware.mousebits.Service.BluetoothCommandService;
 import com.alltheware.mousebits.listeners.AccelerometerListener;
+import com.alltheware.mousebits.objects.MoveRequest;
 
 
 public class MouseActivity extends ActionBarActivity {
@@ -52,6 +51,12 @@ public class MouseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context context = getApplicationContext();
+        PowerManager powerManager = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
+        wakeLock.acquire();
+
         setContentView(R.layout.activity_mouse);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -62,8 +67,8 @@ public class MouseActivity extends ActionBarActivity {
         Handler moveHandler = new Handler();
 
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        AccelerometerListener accelerometerListener = new AccelerometerListener();
-        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        AccelerometerListener accelerometerListener = new AccelerometerListener(this);
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager.registerListener(accelerometerListener, accelerometer,
                 SensorManager.SENSOR_DELAY_NORMAL, moveHandler);
 
@@ -254,4 +259,22 @@ public class MouseActivity extends ActionBarActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
+
+    public void sendMove(MoveRequest moveRequest){
+        String a = new String();
+
+        mCommandService.write(moveRequest.cmd);
+        mCommandService.write((moveRequest.moduleX));
+        mCommandService.write((moveRequest.moduleY));
+        mCommandService.write((moveRequest.moduleZ));
+
+
+
+
+    }
+
+
+
+
 }
