@@ -1,8 +1,11 @@
 package com.alltheware.mousebits.signal;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import com.alltheware.mousebits.app.MouseActivity;
+import com.alltheware.mousebits.objects.MoveRequest;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
@@ -74,21 +77,38 @@ public class AccelerometerProcessor {
         return listToProcess;
     }
 
-    public double processData(){
+    public double processData(MouseActivity mouse){
         ArrayList<Float> preparedXX = grantArraySizeMultipleTwo(this.xx);
         ArrayList<Float> preparedYY = grantArraySizeMultipleTwo(this.yy);
         ArrayList<Float> preparedZZ = grantArraySizeMultipleTwo(this.zz);
 
 
-        double fftResponseXX= classifySamples(preparedXX);
-        double fftResponseYY= classifySamples(preparedYY);
-        double fftResponseZZ= classifySamples(preparedZZ);
+        int fftResponseXX= (int)(classifySamples(preparedXX) * 10);
+        int fftResponseYY=(int) (classifySamples(preparedYY) * 10);
+        int fftResponseZZ=(int) (classifySamples(preparedZZ) * 10);
 
+        int directionXX= (int)(classifyDirection(preparedXX,0));
+        int directionYY=(int) (classifyDirection(preparedYY,0));
+        int directionZZ=(int) (classifyDirection(preparedZZ,0));
 
+        //Muda aqui!
 
         Log.i("FFT Response", "xx=" + fftResponseXX +  "     yy=" + fftResponseYY +  "      zz=" + fftResponseZZ);
+        mouse.sendMove(new MoveRequest(fftResponseXX, fftResponseYY, fftResponseZZ));
 
         return 0;
+    }
+
+    public int classifyDirection(ArrayList<Float> input, int threshold){
+        int direction =0;
+        for (Float value : input){
+            if(value>threshold){
+                direction += 1;
+            } else if (value<threshold){
+                direction += -1;
+            }
+        }
+        return direction;
     }
 
 

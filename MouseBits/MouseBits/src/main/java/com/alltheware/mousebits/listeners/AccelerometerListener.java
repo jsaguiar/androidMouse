@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
+import com.alltheware.mousebits.app.MouseActivity;
+import com.alltheware.mousebits.objects.MoveRequest;
 import com.alltheware.mousebits.signal.AccelerometerProcessor;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class AccelerometerListener implements SensorEventListener
     /** Period for accelerometer sampling **/
     public static final long FETCH_PERIOD = 5;
     /** Length of each accelerometer sample **/
-    public static final long SAMPLE_DURATION = 3;
+    public static final long SAMPLE_DURATION = 4;
 
     //ArrayList for store accelerometer sample data
     private ArrayList<Float> acXXValues = new ArrayList<Float>();
@@ -44,12 +46,14 @@ public class AccelerometerListener implements SensorEventListener
     private int[] LAST_ACTIVITY_INDEX = new int[SAMPLES];
 
 
+    private MouseActivity mouseActivity;
     //Frequency Analyzer
 
     private float accelerometerValues[];
 
-    public AccelerometerListener()
+    public AccelerometerListener(MouseActivity mouseActivity)
     {
+        this.mouseActivity = mouseActivity;
         this.accelerometerValues = new float[3];
 
         //only used for debug
@@ -99,6 +103,18 @@ public class AccelerometerListener implements SensorEventListener
 
         long timestamp = System.currentTimeMillis();
 
+        int fftResponseXX= (int)(acxx* 10);
+        int fftResponseYY=(int) (acyy * 10);
+        int fftResponseZZ=(int) (aczz * 10);
+
+            Log.i("Listener", "xx=" + fftResponseXX +  "     yy=" + fftResponseYY );
+        mouseActivity.sendMove(new MoveRequest(fftResponseXX, fftResponseYY,fftResponseZZ ));
+
+
+
+        if(true){
+            return;
+        }
         //Inside Sample recording Time Window
         if((timestamp%FETCH_PERIOD) > (FETCH_PERIOD-SAMPLE_DURATION))
         {
@@ -152,7 +168,7 @@ public class AccelerometerListener implements SensorEventListener
 
         AccelerometerProcessor acp = new AccelerometerProcessor(acXXValues, acYYValues, acZZValues);
 
-        acp.processData();
+        acp.processData(mouseActivity);
         /*
         if(moduleX>moduleY){
             Log.d("meter", "xx");
