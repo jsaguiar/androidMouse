@@ -94,7 +94,7 @@ public class AccelerometerProcessor {
         //Muda aqui!
 
         Log.i("FFT Response", "xx=" + fftResponseXX +  "     yy=" + fftResponseYY +  "      zz=" + fftResponseZZ);
-        mouse.sendMove(new MoveRequest(fftResponseXX, fftResponseYY, fftResponseZZ));
+        mouse.sendMove(new MoveRequest(fftResponseXX, fftResponseYY, fftResponseZZ,directionXX,directionYY,directionZZ ));
 
         return 0;
     }
