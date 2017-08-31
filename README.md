@@ -1,4 +1,3 @@
-codebits2014
-============
+Use you android phone as your mouse!
 
-u mouse
+We take advantage of cellphone sensors!
